@@ -1,58 +1,75 @@
-# 🔬 DocForensics
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js 14" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+</p>
 
-**Document authenticity analysis tool.** Detect manipulation, forgery, and tampering in documents and images before they become evidence.
+<h1 align="center">DocForensics</h1>
+
+<p align="center">
+  <strong>Document authenticity analysis platform</strong><br/>
+  Detect manipulation, forgery, and tampering in documents and images.
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#api">API</a> •
+  <a href="#deployment">Deployment</a>
+</p>
+
+---
 
 ## The Problem
 
-Document forgery increased **244% in 2024**. Fake IDs cost ~$15 on OnlyFake. Synthetic identity fraud causes **$30B+** in annual losses. Legal professionals receiving contracts, identity documents, or evidence have no accessible way to assess authenticity—existing solutions are enterprise-priced or require forensic expertise.
+Document forgery increased **244% in 2024**. Fake IDs cost ~$15 on OnlyFake. Synthetic identity fraud causes **$30B+** in annual losses.
 
-DocForensics solves this by:
-- Extracting and analyzing metadata for inconsistencies
-- Detecting compression artifacts suggesting manipulation
-- Analyzing document structure for hidden content
-- Checking font consistency for copy-paste indicators
-- Running visual analysis (ELA, clone detection, noise analysis)
-- Optional ML-based forgery detection
+Legal professionals, compliance teams, and investigators receiving contracts, identity documents, or evidence have no accessible way to assess authenticity—existing solutions are enterprise-priced or require forensic expertise.
+
+**DocForensics** is VirusTotal for documents.
+
+---
 
 ## Features
 
-### 📋 Metadata Analysis
-- Extract creation/modification software
-- Detect date inconsistencies and paradoxes
-- Find suspicious editing software (Photoshop, GIMP)
-- Extract GPS coordinates from images
-- Flag stripped or missing metadata
+### 8 Parallel Forensic Analyzers
 
-### 🗜️ Compression Analysis
-- Estimate JPEG quality levels
-- Detect resave artifacts
-- Find quality variance across regions
-- Detect JPEG artifacts in PNG files
-- Analyze color distribution anomalies
+| Analyzer | Description | File Types |
+|----------|-------------|------------|
+| **Metadata** | Creation software, date paradoxes, GPS, stripped data | All |
+| **Compression** | JPEG quality, resave artifacts, format mismatches | Images |
+| **Structure** | Embedded files, JavaScript, layers, incremental edits | PDF |
+| **Fonts** | Font mixing, copy-paste indicators, unusual usage | PDF |
+| **Visual** | ELA, clone detection, edge & noise analysis | Images |
+| **ML/Heuristics** | Statistical anomalies, forgery probability scoring | Images |
+| **ID Detection** | Face detection, aspect ratio, document type inference | Images |
+| **Signatures** | Digital signatures, handwritten detection, stamps | All |
 
-### 🏗️ Structure Analysis (PDFs)
-- Detect embedded files
-- Flag JavaScript (potential malware)
-- Identify form fields and digital signatures
-- Check for hidden layers
-- Count incremental updates (editing history)
+### Document Comparison
 
-### 🔤 Font Analysis
-- Count and catalog fonts used
-- Detect unusual font mixtures
-- Flag copy-paste indicators
-- Identify unembedded fonts
+Side-by-side analysis of two documents with:
+- Metadata field comparison
+- Hash verification
+- Visual difference highlighting
+- Match/mismatch severity scoring
 
-### 👁️ Visual Analysis
-- **Error Level Analysis (ELA)**: Visualize compression inconsistencies
-- **Clone Detection**: Find copy-move regions
-- **Edge Analysis**: Detect cut-and-paste artifacts
-- **Noise Analysis**: Find compositing from multiple sources
+### Batch Processing
 
-### 🤖 ML Detection (Optional)
-- Roboflow integration for AI-powered forgery detection
-- Configurable model selection
-- Probability scoring
+Upload and analyze up to 10 documents simultaneously with:
+- Real-time progress tracking per file
+- Parallel analysis for speed
+- Auto-save to history
+
+### Settings & Preferences
+
+Configurable analysis with persistent settings:
+- Toggle individual analyzers
+- Set analysis timeout
+- Configure export format defaults
+- Manage history storage
+
+---
 
 ## Quick Start
 
@@ -75,75 +92,111 @@ npm run cli -- evidence.jpg -o report.md -f markdown
 
 # JSON for programmatic use
 npm run cli -- contract.pdf -o results.json -f json
-
-# Verbose output
-npm run cli -- image.png -v
 ```
 
-### Exit Codes (for CI/CD)
-- `0`: Low risk
-- `1`: Medium risk
-- `2`: High risk
-- `3`: Critical risk
+### Exit Codes (CI/CD Integration)
+
+| Code | Risk Level |
+|------|------------|
+| `0` | Low |
+| `1` | Medium |
+| `2` | High |
+| `3` | Critical |
+
+---
 
 ## Supported Formats
 
-| Format | Metadata | Compression | Structure | Fonts | Visual | ML |
-|--------|----------|-------------|-----------|-------|--------|-----|
-| PDF | ✅ | - | ✅ | ✅ | - | - |
-| JPEG | ✅ | ✅ | - | - | ✅ | ✅ |
-| PNG | ✅ | ✅ | - | - | ✅ | ✅ |
-| TIFF | ✅ | - | - | - | ✅ | ✅ |
-| WebP | ✅ | ✅ | - | - | ✅ | ✅ |
-| DOCX | ✅ | - | - | - | - | - |
+| Format | Metadata | Compression | Structure | Fonts | Visual | ML | ID | Signatures |
+|--------|:--------:|:-----------:|:---------:|:-----:|:------:|:--:|:--:|:----------:|
+| PDF | ✅ | - | ✅ | ✅ | - | - | - | ✅ |
+| JPEG | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
+| PNG | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
+| TIFF | ✅ | - | - | - | ✅ | ✅ | ✅ | ✅ |
+| WebP | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
+| DOCX | ✅ | - | ✅ | - | - | - | - | - |
 
-## Risk Levels
+---
 
-| Level | Score | Meaning |
-|-------|-------|---------|
-| 🟢 Low | 0-25 | No significant issues detected |
-| 🟡 Medium | 26-50 | Some findings warrant attention |
-| 🟠 High | 51-75 | Multiple concerning indicators |
-| 🔴 Critical | 76-100 | Strong signs of manipulation |
+## Risk Scoring
+
+```
+Risk Score = Σ(finding severity × weight)
+```
+
+| Severity | Weight | Example |
+|----------|--------|---------|
+| Info | 0 | Metadata extracted |
+| Warning | 10 | Unusual editing software |
+| Suspicious | 25 | Date paradox detected |
+| Critical | 50 | ML detects high forgery probability |
+
+**Escalation Rules:**
+- Any critical finding → Critical risk
+- 3+ suspicious findings → Critical risk
+- 1+ suspicious OR 3+ warnings → High risk
+
+---
 
 ## API
 
 ```bash
-curl -X POST http://localhost:3000/api/analyze \
+curl -X POST https://your-domain.com/api/analyze \
   -F "file=@document.pdf"
 ```
 
-Response includes:
-- `overallRisk`: low/medium/high/critical
-- `riskScore`: 0-100
-- `findings`: Array of categorized findings
-- `metadata`: Extracted metadata and analysis
-- `recommendations`: Actionable next steps
+### Response Schema
+
+```typescript
+{
+  documentName: string;
+  documentType: string;
+  documentHash: string;
+  overallRisk: 'low' | 'medium' | 'high' | 'critical';
+  riskScore: number; // 0-100
+  findings: Finding[];
+  metadata: MetadataAnalysis;
+  compression: CompressionAnalysis;
+  structure: StructureAnalysis;
+  fonts: FontAnalysis;
+  visual: VisualAnalysis;
+  ml: MLAnalysis;
+  idDocument: IDDocumentAnalysis;
+  signatures: SignatureAnalysis;
+  recommendations: string[];
+}
+```
+
+---
 
 ## ML Configuration
 
-For enhanced forgery detection, configure Roboflow:
+DocForensics works without any API keys using local heuristic analysis. For enhanced detection, optionally configure Roboflow:
 
 ```bash
 export ROBOFLOW_API_KEY=your_key
 export ROBOFLOW_MODEL=document-forgery-detection/1
 ```
 
-## Tech Stack
+### Local Heuristics (No API Required)
 
-- **Frontend**: Next.js 14, React, Tailwind CSS
-- **Image Processing**: Sharp
-- **Metadata**: ExifReader
-- **PDF Parsing**: pdf-parse
-- **ML**: Roboflow API (optional)
+When Roboflow is not configured, these analyses run automatically:
+- Statistical anomaly detection
+- Edge inconsistency analysis
+- Noise pattern detection
+- Color distribution analysis
+- JPEG block artifact detection
+- Clone region detection
+
+---
 
 ## Deployment
 
-### Vercel
+### Vercel (Recommended)
 
 ```bash
 npm install -g vercel
-vercel
+vercel --prod
 ```
 
 ### Docker
@@ -160,24 +213,69 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
-## Limitations
+---
 
-- **Visual analysis**: Works best on uncompressed or lightly compressed images
-- **Font analysis**: Most effective for PDFs
-- **ML detection**: Requires Roboflow API key
-- **Scope**: First-pass screening, not definitive forensic proof
+## Architecture
+
+```
+┌─────────────┐     ┌──────────────────────────────────────┐
+│   Upload    │────▶│           Forensic Engine            │
+└─────────────┘     │  ┌────────┐ ┌────────┐ ┌────────┐   │
+                    │  │Metadata│ │Compress│ │Structure│   │
+                    │  └────────┘ └────────┘ └────────┘   │
+                    │  ┌────────┐ ┌────────┐ ┌────────┐   │
+                    │  │ Fonts  │ │ Visual │ │   ML   │   │
+                    │  └────────┘ └────────┘ └────────┘   │
+                    │  ┌────────┐ ┌────────┐              │
+                    │  │   ID   │ │  Sig   │  (parallel)  │
+                    │  └────────┘ └────────┘              │
+                    └──────────────────────────────────────┘
+                                    │
+                                    ▼
+                    ┌──────────────────────────────────────┐
+                    │         Risk Calculation             │
+                    │   findings → weights → score → level │
+                    └──────────────────────────────────────┘
+                                    │
+                                    ▼
+                    ┌──────────────────────────────────────┐
+                    │          Forensic Report             │
+                    │    JSON / Markdown / PDF Export      │
+                    └──────────────────────────────────────┘
+```
+
+---
 
 ## Use Cases
 
-- **Litigation Support**: Screen evidence before trial
-- **Due Diligence**: Verify document authenticity in transactions
-- **KYC/AML**: First-pass ID document verification
-- **Insurance Claims**: Detect potentially manipulated documentation
-- **HR/Background Checks**: Verify submitted credentials
+| Industry | Application |
+|----------|-------------|
+| **Legal** | Screen evidence before trial, verify contract authenticity |
+| **Finance** | KYC/AML document verification, due diligence |
+| **Insurance** | Detect manipulated claims documentation |
+| **HR** | Verify credentials, background check documents |
+| **Real Estate** | Validate property documents, identity verification |
+
+---
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS
+- **Image Processing**: Sharp
+- **Metadata**: ExifReader
+- **PDF**: pdf-parse
+- **DOCX**: JSZip
+- **ML**: Roboflow (optional)
+
+---
 
 ## Legal Disclaimer
 
-DocForensics provides indicators that may suggest manipulation but cannot definitively prove or disprove authenticity. Results should be interpreted by qualified professionals. This tool is not a substitute for professional forensic examination, which may be required for legal purposes.
+DocForensics provides indicators that may suggest manipulation but cannot definitively prove or disprove authenticity. Results should be interpreted by qualified professionals. This tool is not a substitute for professional forensic examination, which may be required for legal proceedings.
+
+---
 
 ## License
 
@@ -185,4 +283,7 @@ MIT
 
 ---
 
-**Built for the authentication cliff.** When verification becomes scarce, infrastructure matters.
+<p align="center">
+  <strong>Built for the authentication cliff.</strong><br/>
+  When verification becomes scarce, infrastructure matters.
+</p>
