@@ -3,6 +3,9 @@
   <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+  <img src="https://img.shields.io/badge/Status-MVP-2ea44f" alt="Status: MVP" />
+  <img src="https://img.shields.io/badge/Lint-next%20lint-blue" alt="Lint: next lint" />
+  <img src="https://img.shields.io/badge/Tests-none-lightgrey" alt="Tests: none" />
 </p>
 
 <h1 align="center">DocForensics</h1>
@@ -13,9 +16,9 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#api">API</a> •
+  <a href="#features">Features</a> |
+  <a href="#quick-start">Quick Start</a> |
+  <a href="#api">API</a> |
   <a href="#deployment">Deployment</a>
 </p>
 
@@ -25,7 +28,7 @@
 
 Document forgery increased **244% in 2024**. Fake IDs cost ~$15 on OnlyFake. Synthetic identity fraud causes **$30B+** in annual losses.
 
-Legal professionals, compliance teams, and investigators receiving contracts, identity documents, or evidence have no accessible way to assess authenticity—existing solutions are enterprise-priced or require forensic expertise.
+Legal professionals, compliance teams, and investigators receiving contracts, identity documents, or evidence have no accessible way to assess authenticity - existing solutions are enterprise-priced or require forensic expertise.
 
 **DocForensics** is VirusTotal for documents.
 
@@ -109,19 +112,19 @@ npm run cli -- contract.pdf -o results.json -f json
 
 | Format | Metadata | Compression | Structure | Fonts | Visual | ML | ID | Signatures |
 |--------|:--------:|:-----------:|:---------:|:-----:|:------:|:--:|:--:|:----------:|
-| PDF | ✅ | - | ✅ | ✅ | - | - | - | ✅ |
-| JPEG | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
-| PNG | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
-| TIFF | ✅ | - | - | - | ✅ | ✅ | ✅ | ✅ |
-| WebP | ✅ | ✅ | - | - | ✅ | ✅ | ✅ | ✅ |
-| DOCX | ✅ | - | ✅ | - | - | - | - | - |
+| PDF | Yes | - | Yes | Yes | - | - | - | Yes |
+| JPEG | Yes | Yes | - | - | Yes | Yes | Yes | Yes |
+| PNG | Yes | Yes | - | - | Yes | Yes | Yes | Yes |
+| TIFF | Yes | - | - | - | Yes | Yes | Yes | Yes |
+| WebP | Yes | Yes | - | - | Yes | Yes | Yes | Yes |
+| DOCX | Yes | - | Yes | - | - | - | - | - |
 
 ---
 
 ## Risk Scoring
 
 ```
-Risk Score = Σ(finding severity × weight)
+Risk Score = sum(finding severity * weight)
 ```
 
 | Severity | Weight | Example |
@@ -132,16 +135,16 @@ Risk Score = Σ(finding severity × weight)
 | Critical | 50 | ML detects high forgery probability |
 
 **Escalation Rules:**
-- Any critical finding → Critical risk
-- 3+ suspicious findings → Critical risk
-- 1+ suspicious OR 3+ warnings → High risk
+- Any critical finding => Critical risk
+- 3+ suspicious findings => Critical risk
+- 1+ suspicious OR 3+ warnings => High risk
 
 ---
 
 ## API
 
 ```bash
-curl -X POST https://your-domain.com/api/analyze \
+curl -X POST https://forensics.alexgallefrom.io/api/analyze \
   -F "file=@document.pdf"
 ```
 
@@ -218,30 +221,24 @@ CMD ["npm", "start"]
 ## Architecture
 
 ```
-┌─────────────┐     ┌──────────────────────────────────────┐
-│   Upload    │────▶│           Forensic Engine            │
-└─────────────┘     │  ┌────────┐ ┌────────┐ ┌────────┐   │
-                    │  │Metadata│ │Compress│ │Structure│   │
-                    │  └────────┘ └────────┘ └────────┘   │
-                    │  ┌────────┐ ┌────────┐ ┌────────┐   │
-                    │  │ Fonts  │ │ Visual │ │   ML   │   │
-                    │  └────────┘ └────────┘ └────────┘   │
-                    │  ┌────────┐ ┌────────┐              │
-                    │  │   ID   │ │  Sig   │  (parallel)  │
-                    │  └────────┘ └────────┘              │
-                    └──────────────────────────────────────┘
-                                    │
-                                    ▼
-                    ┌──────────────────────────────────────┐
-                    │         Risk Calculation             │
-                    │   findings → weights → score → level │
-                    └──────────────────────────────────────┘
-                                    │
-                                    ▼
-                    ┌──────────────────────────────────────┐
-                    │          Forensic Report             │
-                    │    JSON / Markdown / PDF Export      │
-                    └──────────────────────────────────────┘
+Upload
+  |
+  v
+Forensic Engine
+  |-- Metadata
+  |-- Compression
+  |-- Structure
+  |-- Fonts
+  |-- Visual
+  |-- ML/Heuristics
+  |-- ID Detection
+  `-- Signatures
+  |
+  v
+Risk Calculation (findings -> weights -> score -> level)
+  |
+  v
+Forensic Report (JSON / Markdown / PDF Export)
 ```
 
 ---

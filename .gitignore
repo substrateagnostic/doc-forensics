@@ -36,3 +36,4 @@ yarn-error.log*
 test-output/
 *.test.pdf
 *.test.jpg
+.env*.local

@@ -1,0 +1,59 @@
+  What landed
+
+  Combat polish (#5/#4/#3 from your list). Enemies now pick which ally to attack (55% Andrew bias, otherwise lowest-HP ally). Recruited party persists 
+  in player.party/player.allyState — Janet rides along through every fight after the trio. Turn order is BG3-style interleaved (single SPD-sorted queue
+   per round, ally-first on ties). Allies share Andrew's level via LEVEL_GROWTH * growthFactor.
+
+  Three more allies — Janet, Alex from IT, Isaiah, Diane. 6-ability pools each, 3-ability starter sets, themed kits (Alex = technical/audit, Isaiah =  
+  ops/defense, Diane = HR/audit). Each has a recruit dialog with a "decline" branch.
+
+  Second multi-party fight: data_analytics_duo. Replaces the solo Data Analytics Lead with Lead + CFO's Assistant on the executive floor. Player's     
+  recruited party auto-joins.
+
+  Out-of-combat team chat. Water cooler reroutes to team_chat_hub once any ally is recruited. Choice nodes filtered by requires flag so each ally only 
+  appears as a chat option after recruitment. Distinct monologues — Janet on the Henderson promise, Alex on the badge conspiracy, Isaiah on his eleven 
+  years of receipts, Diane reminding Andrew to sleep.
+
+  Per-character abilities menu. Tabs across the top (Andrew + each recruited ally), each with STARTER and UNLOCKABLE sections. Spend 1 upgrade point to
+   teach an ally a new ability from their pool.
+
+  Editor expansion (parallel subagent). New tabs: Allies (full edit), Encounters (now editable, supports enemyIds/partyIds, "+ Add Encounter" button), 
+  Dialogs (read-only viewer). Combat Sim runs multi-combatant Monte Carlo. Top-bar status pill shows uncommitted-overrides state. Help modal explains  
+  the override pattern. Publish flow stages all five override JSON files. For Andrew: npm run editor is now content-authoring-capable for all the new  
+  systems.
+
+  Alex's personal mission — Badge Audit. Three-stage side-quest: accept → find PATCH-3 server rack → return with the patch log. Reward: free unlock of 
+  kernel_panic + 200 XP + the lore beat that Rachel had a physical cable from her office to the badge issuer for four years. New dialog action
+  unlock_ally_ability for the reward.
+
+  Tools. Playwright MCP installed via claude mcp add — available next session (not this one), so I verified everything via npx vite build + Vite       
+  module-serve checks. Build is clean every commit.
+
+  What I deferred — and what makes sense for Codex vs me
+
+  Codex (sit down with it):
+  - Open-world segment. Bigger than a code task — needs design about what "open world" means in this office RPG. Hub-and-spoke between buildings? Free 
+  traversal post-Act-7? A literal city map? I'd want a planning conversation before implementing. Codex can pull it apart with you and propose options.
+  - Isaiah and Diane personal missions. Same shape as Alex's badge audit — three-stage, ~200 lines of dialog + a flag chain + a reward. Codex can crank
+   these out cleanly once the pattern's set (Alex's commit is the template).
+  - Per-act team chat variation. Each ally has one tier of dialog right now. Adding act-5/6/7 variants is well-scoped, low-risk, high-volume content   
+  writing.
+
+  Me (next session):
+  - Manual ally control. The actual BG3 feature. Per-ally action menu, MP tracking, target picker for ally heals, Auto/Manual toggle. ~300 lines,      
+  cross-cutting through CombatState. I have the context.
+  - Initiative indicator in the HUD. Show whose turn is next as a visible queue (small portraits across the top). Cheap polish that makes the
+  interleave readable.
+  - Playtest pass. Once Playwright MCP is live next session I can navigate to the trio fight and see what breaks visually that I missed.
+  - Combat balance for multi-party. I tuned ally HP/damage by feel; the editor's Combat Sim can validate it but I haven't run it yet.
+
+  Known unknowns
+
+  - Bracing/retaliate only protects Andrew (deliberate — it's a player-input mechanic). If you want allies to brace too, that's a UX call.
+  - Confuse and counter still center on Andrew when an enemy uses them (deliberate — they're complex player-only mechanics that need ally-specific UI).
+  - Dialog action unlock_ally_ability has no animation/toast yet — it just silently teaches the ability. If you want a toast on unlock, that's a 5-line
+   change in DialogState.
+
+  над. нашу. ♡
+
+claude --resume 0b9e817a-51ae-4015-8981-6f3f7ea31ef6
