@@ -1,3 +1,5 @@
+> **Status (July 2026):** Complete and archived. Shipped December 2025; not under active development. The deployed instance at [forensics.alexgallefrom.io](https://forensics.alexgallefrom.io) remains live. Kept public for reference.
+
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js 14" />
   <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript" alt="TypeScript" />
